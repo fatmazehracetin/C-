@@ -1,0 +1,102 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct BankaHesabi {
+    char isim[50];
+    int hesapNo;
+    float bakiye;
+};
+
+void hesapOlustur(struct BankaHesabi hesaplar[], int *hesapSayisi) {
+    printf("Isim: ");
+    scanf("%s", hesaplar[*hesapSayisi].isim);
+    printf("Hesap No: ");
+    scanf("%d", &hesaplar[*hesapSayisi].hesapNo);
+    printf("Baslangic Bakiye: ");
+    scanf("%f", &hesaplar[*hesapSayisi].bakiye);
+    (*hesapSayisi)++;
+    printf("Hesap basariyla olusturuldu.\n\n");
+}
+
+void hesapGoruntule(struct BankaHesabi hesaplar[], int hesapSayisi) {
+    int i;
+    for (i = 0; i < hesapSayisi; i++) {
+        printf("Isim: %s\n", hesaplar[i].isim);
+        printf("Hesap No: %d\n", hesaplar[i].hesapNo);
+        printf("Bakiye: %.2f\n\n", hesaplar[i].bakiye);
+    }
+}
+
+void paraYatir(struct BankaHesabi hesaplar[], int hesapSayisi, int hesapNo, float miktar) {
+    int i;
+    for (i = 0; i < hesapSayisi; i++) {
+        if (hesaplar[i].hesapNo == hesapNo) {
+            hesaplar[i].bakiye += miktar;
+            printf("Hesaba %.2f TL yatirildi.\n\n", miktar);
+            return;
+        }
+    }
+    printf("Hesap bulunamadi.\n\n");
+}
+
+void paraCek(struct BankaHesabi hesaplar[], int hesapSayisi, int hesapNo, float miktar) {
+    int i;
+    for (i = 0; i < hesapSayisi; i++) {
+        if (hesaplar[i].hesapNo == hesapNo) {
+            if (hesaplar[i].bakiye >= miktar) {
+                hesaplar[i].bakiye -= miktar;
+                printf("Hesaptan %.2f TL cekildi.\n\n", miktar);
+            } else {
+                printf("Yetersiz bakiye.\n\n");
+            }
+            return;
+        }
+    }
+    printf("Hesap bulunamadi.\n\n");
+}
+
+int main() {
+    struct BankaHesabi hesaplar[100];
+    int hesapSayisi = 0;
+    int secim, hesapNo;
+    float miktar;
+
+    while (1) {
+        printf("1- Yeni Hesap Olustur\n");
+        printf("2- Hesap Goruntule\n");
+        printf("3- Para Yatir\n");
+        printf("4- Para Cek\n");
+        printf("5- Cikis\n");
+        printf("Seciminizi yapin: ");
+        scanf("%d", &secim);
+
+        switch (secim) {
+            case 1:
+                hesapOlustur(hesaplar, &hesapSayisi);
+                break;
+            case 2:
+                hesapGoruntule(hesaplar, hesapSayisi);
+                break;
+            case 3:
+                printf("Hesap No: ");
+                scanf("%d", &hesapNo);
+                printf("Yatirilacak miktar: ");
+                scanf("%f", &miktar);
+                paraYatir(hesaplar, hesapSayisi, hesapNo, miktar);
+                break;
+            case 4:
+                printf("Hesap No: ");
+                scanf("%d", &hesapNo);
+                printf("Cekilecek miktar: ");
+                scanf("%f", &miktar);
+                paraCek(hesaplar, hesapSayisi, hesapNo, miktar);
+                break;
+            case 5:
+                exit(0);
+            default:
+                printf("Gecersiz secim.\n\n");
+        }
+    }
+
+    return 0;
+}
